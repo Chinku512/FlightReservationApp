@@ -1,0 +1,117 @@
+package com.example.Flight.Utility;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Date;
+
+import org.hibernate.mapping.Table;
+import org.springframework.stereotype.Component;
+
+import com.example.Flight.Entity.Flight;
+import com.example.Flight.Entity.Reservation;
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.List;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.sun.istack.NotNull;
+@Component
+
+public class PDFgenerator {
+      public static void generateItinerary(Reservation reservation,String filePath) {
+        	Document document = new Document();
+        	try {
+
+        			PdfWriter.getInstance(document, new FileOutputStream(filePath)) ;
+        			document.open();
+        			document.add(generateTable(reservation));
+        			document.close();
+        			
+        		}catch (FileNotFoundException | DocumentException e) {
+        			e.printStackTrace();
+        		}
+        	}
+        		private static PdfPTable generateTable(Reservation reservation) {
+        				
+        				PdfPTable table = new PdfPTable(2);
+        				PdfPCell cell;
+        				
+        				
+        				cell= new PdfPCell(new Phrase("Flight Itinerary"));
+        				cell.setColspan(2);
+        				table.addCell(cell);
+        			 
+        				cell = new PdfPCell(new Phrase("Flight Details"));
+        				cell.setColspan(2);
+        				table.addCell(cell);
+        				
+        				table.addCell("Departure City");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getDepartureCity());
+        				}
+        				//table.addCell(reservation.getFlight().getDepartureCity());
+
+        				table.addCell("Arrival City");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getArrivalCity());
+        				}
+        				
+        				
+        				table.addCell("Flight Number");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getFlightNumber());
+        				}
+        				
+        				
+        				table.addCell("Operating Airline");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getOperatingAirLines());
+        				}
+        				
+        				
+        				table.addCell("Departure Date");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getDateOfDeparture().toString());
+        				}
+        			
+        				
+        				table.addCell("Departure Time");
+        				if(reservation.equals(table)) {
+        					table.addCell(reservation.getFlight().getEstimatedDepartureTime().toString());
+        				}
+        				
+        				
+        				// Table for Passenger Details
+        				cell = new PdfPCell(new Phrase("Passenger Details"));
+        				cell.setColspan(2);
+        				table.addCell(cell);
+        				
+        				table.addCell("First Name");
+        				table.addCell(reservation.getPassenger().getFirstName());
+        				
+        				table.addCell("Last Name");
+        				table.addCell(reservation.getPassenger().getLastName());
+
+        				table.addCell("Email");
+        				table.addCell(reservation.getPassenger().getEmail());
+        				
+        				table.addCell("Phone");
+        				table.addCell(reservation.getPassenger().getPhone());
+        				
+        				return table;
+       	}
+        
+}
